@@ -1,4 +1,4 @@
-name: Django Test
+name: Test build
 
 on:
   push:
@@ -33,3 +33,19 @@ jobs:
         run: |
           cd backend
           python manage.py test
+
+  build_react:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: |
+          cd calculator-app
+          npm run build --if-present
