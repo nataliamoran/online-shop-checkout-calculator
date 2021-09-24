@@ -1,31 +1,15 @@
 import React from 'react';
-
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Navbar from "./components/Navbar/Navbar";
 
 import CheckoutCalc from './components/checkout-calculator';
 import './App.css';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { };
-  }
-
-  render() {
-    return (
-      <BrowserRouter>
-        <Switch>
-          <Route
-            exact
-            path="/"
-            render={() => <CheckoutCalc state={this.state} />}
-          />
-        </Switch>
-      </BrowserRouter>
-    );
-  }
+function App(){
+  return(
+      <div className={"App"}>
+        <Navbar />
+      </div>
+  )
 }
-
 export default App;
-
-//testing push
