@@ -25,6 +25,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Sets env vars based on branch
+        run: |
+          echo "DEPLOYMENT_ENV=dev" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/heads/develop')
+      - name: Sets env vars based on branch
+        run: |
+          echo "DEPLOYMENT_ENV=prod" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/heads/master')
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
@@ -42,7 +50,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           local: backend
-          remote: ~/projects/dev
+          remote: ~/projects/${{env.DEPLOYMENT_ENV}}
           host: ${{ secrets.HOSTNAME_DEV }}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
@@ -50,7 +58,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           local: requirements.txt
-          remote: ~/projects/dev/requirements.txt
+          remote: ~/projects/${{env.DEPLOYMENT_ENV}}/requirements.txt
           host: ${{ secrets.HOSTNAME_DEV }}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
@@ -61,12 +69,12 @@ jobs:
           username: ${{ secrets.USERNAME_DEV }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/projects/dev
+            cd ~/projects/${{env.DEPLOYMENT_ENV}}
             source env/bin/actiate
             pip install -r requirements.txt
             cd backend
             python manage.py migrate
-            sudo systemctl restart gunicorn-dev.service
+            sudo systemctl restart gunicorn-${{env.DEPLOYMENT_ENV}}.service
 
   build_fe_and_deploy:
     timeout-minutes: 5
@@ -76,6 +84,14 @@ jobs:
         node-version: [14.x]
     steps:
       - uses: actions/checkout@v2
+      - name: Sets env vars based on branch
+        run: |
+          echo "DEPLOYMENT_ENV=dev" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/heads/develop')
+      - name: Sets env vars based on branch
+        run: |
+          echo "DEPLOYMENT_ENV=prod" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/heads/master')
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -99,7 +115,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           local: calculator-app/fe
-          remote: ~/projects/dev
+          remote: ~/projects/${{env.DEPLOYMENT_ENV}}
           host: ${{ secrets.HOSTNAME_DEV }}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
@@ -113,7 +129,7 @@ jobs:
         if: github.ref == 'refs/heads/master' &&  success()
         env:
           SLACK_USERNAME: "Github Actions"
-          SLACK_ICON_EMOJI: ":ocotcat:"
+          SLACK_ICON_EMOJI: ":heart_eyes_cat:"
           SLACK_TITLE: "This is a GitHub Actions PROD build!"
           SLACK_MESSAGE: 'PROD deployment successful :rocket:'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -122,7 +138,7 @@ jobs:
         if: github.ref == 'refs/heads/develop' &&  success()
         env:
           SLACK_USERNAME: "Github Actions"
-          SLACK_ICON_EMOJI: ":ocotcat:"
+          SLACK_ICON_EMOJI: ":heart_eyes_cat:"
           SLACK_TITLE: "This is a GitHub Actions DEV build!"
           SLACK_MESSAGE: 'DEV deployment successful :rocket:'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
