@@ -96,7 +96,7 @@ jobs:
       - name: Copy frontend build to DEV server
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: calculator-app/build/*
+          local: build/*
           remote: ~/projects/dev/fe
           host: ${{ secrets.HOSTNAME_DEV }}
           username: ${{ secrets.USERNAME_DEV }}
