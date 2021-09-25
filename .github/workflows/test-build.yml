@@ -25,14 +25,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Sets env vars based on branch
-        run: |
-          echo "DEPLOYMENT_ENV=dev" >> $GITHUB_ENV
-        if: startsWith(github.ref, 'refs/heads/develop')
-      - name: Sets env vars based on branch
-        run: |
-          echo "DEPLOYMENT_ENV=prod" >> $GITHUB_ENV
-        if: startsWith(github.ref, 'refs/heads/master')
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
@@ -41,40 +33,49 @@ jobs:
         run: |
           cd backend
           python manage.py test
-      - name: Add DEV server to known host
+
+      - name: Sets env vars to dev
+        run: |
+          echo "HOST=${{ secrets.HOSTNAME_DEV }}" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/heads/develop')
+      - name: Sets env vars to prod
+        run: |
+          echo "HOST=${{ secrets.HOSTNAME_PROD }}" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/heads/master')
+      - name: Add server to known_hosts
         uses: kielabokkie/ssh-key-and-known-hosts-action@v1
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
-          ssh-host: ${{ secrets.HOSTNAME_DEV }}
-      - name: Copy backend folder to DEV server
+          ssh-host: ${{env.HOST}}
+      - name: Copy backend folder to server
         uses: garygrossgarten/github-action-scp@release
         with:
           local: backend
-          remote: ~/projects/${{env.DEPLOYMENT_ENV}}
-          host: ${{ secrets.HOSTNAME_DEV }}
+          remote: ~/projects/dev
+          host: ${{env.HOST}}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
-      - name: Copy requirements.txt to DEV server
+      - name: Copy requirements.txt to server
         uses: garygrossgarten/github-action-scp@release
         with:
           local: requirements.txt
-          remote: ~/projects/${{env.DEPLOYMENT_ENV}}/requirements.txt
-          host: ${{ secrets.HOSTNAME_DEV }}
+          remote: ~/projects/dev/requirements.txt
+          host: ${{env.HOST}}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
-      - name: Reactivate services on DEV server
+      - name: Reactivate services on server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOSTNAME_DEV }}
+          host: ${{env.HOST}}
           username: ${{ secrets.USERNAME_DEV }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/projects/${{env.DEPLOYMENT_ENV}}
+            cd ~/projects/dev
             source env/bin/actiate
             pip install -r requirements.txt
             cd backend
             python manage.py migrate
-            sudo systemctl restart gunicorn-${{env.DEPLOYMENT_ENV}}.service
+            sudo systemctl restart gunicorn-dev.service
 
   build_fe_and_deploy:
     timeout-minutes: 5
@@ -84,14 +85,6 @@ jobs:
         node-version: [14.x]
     steps:
       - uses: actions/checkout@v2
-      - name: Sets env vars based on branch
-        run: |
-          echo "DEPLOYMENT_ENV=dev" >> $GITHUB_ENV
-        if: startsWith(github.ref, 'refs/heads/develop')
-      - name: Sets env vars based on branch
-        run: |
-          echo "DEPLOYMENT_ENV=prod" >> $GITHUB_ENV
-        if: startsWith(github.ref, 'refs/heads/master')
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -106,17 +99,26 @@ jobs:
           npm run build --if-present
           mv build fe
           cd ..
-      - name: Add DEV server to known host
+
+      - name: Sets env vars to dev server
+        run: |
+          echo "HOST=${{ secrets.HOSTNAME_DEV }}" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/heads/develop')
+      - name: Sets env vars to prod server
+        run: |
+          echo "HOST=${{ secrets.HOSTNAME_PROD }}" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/heads/master')
+      - name: Add server to known_hosts
         uses: kielabokkie/ssh-key-and-known-hosts-action@v1
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
-          ssh-host: ${{ secrets.HOSTNAME_DEV }}
-      - name: Copy frontend build to DEV server
+          ssh-host: ${{ env.HOST }}
+      - name: Copy frontend build to server
         uses: garygrossgarten/github-action-scp@release
         with:
           local: calculator-app/fe
-          remote: ~/projects/${{env.DEPLOYMENT_ENV}}
-          host: ${{ secrets.HOSTNAME_DEV }}
+          remote: ~/projects/dev
+          host: ${{ env.HOST }}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
   slackNotification:
