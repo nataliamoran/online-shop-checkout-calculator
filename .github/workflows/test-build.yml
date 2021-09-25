@@ -63,7 +63,7 @@ jobs:
     steps:
       - name: Copy deployment
         run: |
-          echo ${{ secrets.SSH_KEY }} > sshkey.pem
+          echo "${{ secrets.SSH_KEY }}" > sshkey.pem
           scp -i sshkey.pem -r backend ${{ secrets.USERNAME_DEV }}@${{ secrets.HOSTNAME_DEV }}:~/projects/dev
           scp -i sshkey.pem requirements.txt ${{ secrets.USERNAME_DEV }}@${{ secrets.HOSTNAME_DEV }}:~/projects/dev
           scp -i sshkey.pem -r calculator-app/build/* ${{ secrets.USERNAME_DEV }}@${{ secrets.HOSTNAME_DEV }}:~/projects/dev/fe
