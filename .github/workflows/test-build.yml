@@ -88,6 +88,9 @@ jobs:
         run: |
           cd calculator-app
           npm run build --if-present
+          mv build fe
+          cd ..
+          ls -l
       - name: Add DEV server to known host
         uses: kielabokkie/ssh-key-and-known-hosts-action@v1
         with:
@@ -96,8 +99,8 @@ jobs:
       - name: Copy frontend build to DEV server
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: calculator-app/build/*
-          remote: ~/projects/dev/fe
+          local: calculator-app/fe
+          remote: ~/projects/dev
           host: ${{ secrets.HOSTNAME_DEV }}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
