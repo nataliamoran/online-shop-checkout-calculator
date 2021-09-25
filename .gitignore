@@ -4,3 +4,4 @@ db.sqlite3
 *.http
 .idea/
 node_modules
+static

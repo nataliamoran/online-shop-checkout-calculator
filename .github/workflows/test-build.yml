@@ -11,7 +11,7 @@ on:
         description: 'Reason for manual test'
 
 jobs:
-  test_django:
+  test_django_and_deploy_be:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     strategy:
@@ -34,7 +34,50 @@ jobs:
           cd backend
           python manage.py test
 
-  build_react:
+      - name: Sets env vars to dev
+        run: |
+          echo "HOST=${{ secrets.HOSTNAME_DEV }}" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/heads/develop')
+      - name: Sets env vars to prod
+        run: |
+          echo "HOST=${{ secrets.HOSTNAME_PROD }}" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/heads/master')
+      - name: Add server to known_hosts
+        uses: kielabokkie/ssh-key-and-known-hosts-action@v1
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+          ssh-host: ${{env.HOST}}
+      - name: Copy backend folder to server
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: backend
+          remote: ~/projects/dev
+          host: ${{env.HOST}}
+          username: ${{ secrets.USERNAME_DEV }}
+          privateKey: ${{ secrets.SSH_KEY }}
+      - name: Copy requirements.txt to server
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: requirements.txt
+          remote: ~/projects/dev/requirements.txt
+          host: ${{env.HOST}}
+          username: ${{ secrets.USERNAME_DEV }}
+          privateKey: ${{ secrets.SSH_KEY }}
+      - name: Reactivate services on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{env.HOST}}
+          username: ${{ secrets.USERNAME_DEV }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/projects/dev
+            source env/bin/actiate
+            pip install -r requirements.txt
+            cd backend
+            python manage.py migrate
+            sudo systemctl restart gunicorn-dev.service
+
+  build_fe_and_deploy:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     strategy:
@@ -54,21 +97,50 @@ jobs:
         run: |
           cd calculator-app
           npm run build --if-present
+          mv build fe
+          cd ..
 
-  deploy_dev:
-    timeout-minutes: 5
+      - name: Sets env vars to dev server
+        run: |
+          echo "HOST=${{ secrets.HOSTNAME_DEV }}" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/heads/develop')
+      - name: Sets env vars to prod server
+        run: |
+          echo "HOST=${{ secrets.HOSTNAME_PROD }}" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/heads/master')
+      - name: Add server to known_hosts
+        uses: kielabokkie/ssh-key-and-known-hosts-action@v1
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+          ssh-host: ${{ env.HOST }}
+      - name: Copy frontend build to server
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: calculator-app/fe
+          remote: ~/projects/dev
+          host: ${{ env.HOST }}
+          username: ${{ secrets.USERNAME_DEV }}
+          privateKey: ${{ secrets.SSH_KEY }}
+  slackNotification:
+    name: Slack Notification
     runs-on: ubuntu-latest
-    needs: [build_react, test_django]
-    if: github.ref == 'refs/heads/develop'
+    needs: [test_django_and_deploy_be, build_fe_and_deploy]
     steps:
-      - name: Deploy app
-        run: exit 0
-
-  deploy_prod:
-    timeout-minutes: 5
-    runs-on: ubuntu-latest
-    needs: [build_react, test_django]
-    if: github.ref == 'refs/heads/master'
-    steps:
-      - name: Deploy app
-        run: echo "${{ secrets.SAMPLE_SECRET }}"
+      - name: Slack Notification PROD
+        uses: rtCamp/action-slack-notify@v2
+        if: github.ref == 'refs/heads/master' &&  success()
+        env:
+          SLACK_USERNAME: "Github Actions"
+          SLACK_ICON_EMOJI: ":heart_eyes_cat:"
+          SLACK_TITLE: "This is a GitHub Actions PROD build!"
+          SLACK_MESSAGE: 'PROD deployment successful :rocket:'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Slack Notification DEV
+        uses: rtCamp/action-slack-notify@v2
+        if: github.ref == 'refs/heads/develop' &&  success()
+        env:
+          SLACK_USERNAME: "Github Actions"
+          SLACK_ICON_EMOJI: ":heart_eyes_cat:"
+          SLACK_TITLE: "This is a GitHub Actions DEV build!"
+          SLACK_MESSAGE: 'DEV deployment successful :rocket:'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

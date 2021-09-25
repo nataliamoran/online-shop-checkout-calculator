@@ -1,0 +1,15 @@
+[Unit]
+Description=gunicorn dev daemon
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=gunicorn_dev
+WorkingDirectory=/home/ubuntu/projects/dev/backend
+ExecStart=/home/ubuntu/projects/dev/env/bin/gunicorn --access-logfile - --workers 1 --bind unix:/home/ubuntu/dev.sock backend.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
