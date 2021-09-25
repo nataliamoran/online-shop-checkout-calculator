@@ -11,7 +11,7 @@ on:
         description: 'Reason for manual test'
 
 jobs:
-  test_django:
+  test_django_and_deploy_be:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     strategy:
@@ -68,7 +68,7 @@ jobs:
             python manage.py migrate
             sudo systemctl restart gunicorn-dev.service
 
-  build_react:
+  build_fe_and_deploy:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     strategy:
@@ -88,7 +88,6 @@ jobs:
         run: |
           cd calculator-app
           npm run build --if-present
-          mv build fe
       - name: Add DEV server to known host
         uses: kielabokkie/ssh-key-and-known-hosts-action@v1
         with:
@@ -97,8 +96,8 @@ jobs:
       - name: Copy frontend build to DEV server
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: fe
-          remote: ~/projects/dev
+          local: calculator-app/build/*
+          remote: ~/projects/dev/fe
           host: ${{ secrets.HOSTNAME_DEV }}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
