@@ -61,16 +61,30 @@ jobs:
     needs: [build_react, test_django]
     if: github.ref == 'refs/heads/develop'
     steps:
-      - shell: bash
-        run: echo "$SSH_KEY" > sshkey.pem
-        env:
-          SSH_KEY: ${{ secrets.SSH_KEY }}
-      - name: Copy deployment
-        run: |
-          scp -i ${{ github.workspace }}/sshkey.pem -r backend ${{ secrets.USERNAME_DEV }}@${{ secrets.HOSTNAME_DEV }}:~/projects/dev
-          scp -i ${{ github.workspace }}/sshkey.pem requirements.txt ${{ secrets.USERNAME_DEV }}@${{ secrets.HOSTNAME_DEV }}:~/projects/dev
-          scp -i ${{ github.workspace }}/sshkey.pem -r calculator-app/build/* ${{ secrets.USERNAME_DEV }}@${{ secrets.HOSTNAME_DEV }}:~/projects/dev/fe
-
+      - name: Copy backend folder to DEV server
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: backend
+          remote: ~/projects/dev
+          host: ${{ secrets.HOSTNAME_DEV }}
+          username: ${{ secrets.USERNAME_DEV }}
+          privateKey: ${{ secrets.SSH_KEY }}
+      - name: Copy requirements.txt to DEV server
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: requirements.txt
+          remote: ~/projects/dev/requirements.txt
+          host: ${{ secrets.HOSTNAME_DEV }}
+          username: ${{ secrets.USERNAME_DEV }}
+          privateKey: ${{ secrets.SSH_KEY }}
+      - name: Copy frontend build to DEV server
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: calculator-app/build/*
+          remote: ~/projects/dev/fe
+          host: ${{ secrets.HOSTNAME_DEV }}
+          username: ${{ secrets.USERNAME_DEV }}
+          privateKey: ${{ secrets.SSH_KEY }}
       - name: Reactivate services on DEV server
         uses: appleboy/ssh-action@master
         with:
