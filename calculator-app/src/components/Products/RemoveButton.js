@@ -1,5 +1,5 @@
 import React from "react";
-import './AddButton.css'
+import '../Button.css'
 
 const STYLES = [
     'btn--primary',
@@ -12,12 +12,12 @@ const SIZES = [
 ]
 
 export const RemoveButton = ({
-                              children,
-                              type,
-                              onClick,
-                              buttonStyle,
-                              buttonSize
-                          }) => {
+                           children,
+                           type,
+                           onClick,
+                           buttonStyle,
+                           buttonSize
+                       }) => {
     const checkButtonStyle = STYLES.includes(buttonStyle) ? buttonStyle : STYLES[0]
     const checkButtonSize = SIZES.includes(buttonSize) ? buttonSize : SIZES[0]
 
