@@ -37,7 +37,7 @@ jobs:
         uses: kielabokkie/ssh-key-and-known-hosts-action@v1
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
-          ssh-host: ${{ secrets.USERNAME_DEV }}
+          ssh-host: ${{ secrets.HOSTNAME_DEV }}
       - name: Copy backend folder to DEV server
         uses: garygrossgarten/github-action-scp@release
         with:
@@ -88,6 +88,11 @@ jobs:
         run: |
           cd calculator-app
           npm run build --if-present
+      - name: Add DEV server to known host
+        uses: kielabokkie/ssh-key-and-known-hosts-action@v1
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+          ssh-host: ${{ secrets.HOSTNAME_DEV }}
       - name: Copy frontend build to DEV server
         uses: garygrossgarten/github-action-scp@release
         with:
