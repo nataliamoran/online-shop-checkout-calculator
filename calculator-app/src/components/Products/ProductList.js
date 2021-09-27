@@ -1,43 +1,79 @@
-import React from 'react'
-import {List } from 'semantic-ui-react'
-import {AddButton} from "./AddButton";
-import {RemoveButton} from "./RemoveButton";
+import React from "react";
+import {
+  Container,
+  Dimmer,
+  Image,
+  Item,
+  Label,
+  Loader,
+  Message,
+  Segment
+} from "semantic-ui-react";
+import {PRODUCTS} from "../../config.js";
 
-const ListExampleFloated = () => (
-    <List divided verticalAlign='middle'>
-        <List.Item>
-            <List.Content floated='right'>
-                <AddButton>Add</AddButton>
-                <RemoveButton>Remove</RemoveButton>
-            </List.Content>
-            <img src={require('../../images/castle.jpg').default} alt="not found" height={64} width={48}/>
-            <List.Content>Castle In The Sky</List.Content>
-        </List.Item>
-        <List.Item>
-            <List.Content floated='right'>
-                <AddButton>Add</AddButton>
-                <RemoveButton>Remove</RemoveButton>
-            </List.Content>
-            <img src={require('../../images/pom poko.jpg').default} alt="not found" height={64} width={48}/>
-            <List.Content>Pom Poko</List.Content>
-        </List.Item>
-        <List.Item>
-            <List.Content floated='right'>
-                <AddButton>Add</AddButton>
-                <RemoveButton>Remove</RemoveButton>
-            </List.Content>
-            <img src={require('../../images/spirited away.jpg').default} alt="not found" height={64} width={48}/>
-            <List.Content>Spirited Away</List.Content>
-        </List.Item>
-        <List.Item>
-            <List.Content floated='right'>
-                <AddButton>Add</AddButton>
-                <RemoveButton>Remove</RemoveButton>
-            </List.Content>
-            <img src={require('../../images/porco rosso.jpg').default} alt="not found" height={64} width={48}/>
-            <List.Content>Porco Rosso</List.Content>
-        </List.Item>
-    </List>
-)
+class ProductList extends React.Component {
+ constructor(props) {
+    super(props);
 
-export default ListExampleFloated
+    this.state = {
+      items: null,
+    };
+  }
+   componentDidMount() {
+      this.getItems();
+   }
+
+   getItems() {
+     fetch(PRODUCTS)
+       .then((response) => response.json())
+       .then((json) => {
+            this.setState({
+              items: json,
+            });
+            this.forceUpdate();
+          })
+          .catch(() => {
+       });
+   }
+  render() {
+    return (
+      <Container>
+        <Item.Group divided>
+          {this.state.items.map(item => {
+            return (
+              <Item key={item.id}>
+                <Item.Image src={item.image} />
+                <Item.Content>
+                  <Item.Header
+                    as="a"
+                    onClick={() =>
+                      this.props.history.push(`/products/${item.id}`)
+                    }
+                  >
+                    {item.title}
+                  </Item.Header>
+                  <Item.Meta>
+                    <span className="cinema">{item.category}</span>
+                  </Item.Meta>
+                </Item.Content>
+              </Item>
+            );
+          })}
+        </Item.Group>
+      </Container>
+    );
+  }
+}
+/*
+const mapDispatchToProps = dispatch => {
+  return {
+    refreshCart: () => dispatch(fetchCart())
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(ProductList);
+*/
+export default ProductList;
