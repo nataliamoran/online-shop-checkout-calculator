@@ -1,14 +1,49 @@
-from django.http import JsonResponse
+from rest_framework.response import Response
 
 from .models import *
-from .serializers import ProductSerializer
-from rest_framework import viewsets, permissions, status
+from .serializers import ProductSerializer, OrderSerializer
+from rest_framework import viewsets, status
 
-
-def index(request):
-    return JsonResponse({"msg": "Hello, world!"})
+TAX = 0.15
 
 
 class ProductView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+
+class OrderView(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+    def create(self, request, *args, **kwargs):
+        """
+        Overrides base 'create' method to calculate a total & subtotal for an order
+        """
+        # calculate an order subtotal & total
+        all_products = Product.objects.all()
+        all_discounts = Discount.objects.all()
+        subtotal = 0
+        for product_id in request.data:
+            if not product_id.isdigit():
+                continue
+            products = all_products.filter(id=product_id)
+            subtotal += products[0].price * request.data[product_id] if products else 0
+        if subtotal == 0:  # cannot create an order with zero subtotal
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        discounts = all_discounts.filter(min__lte=subtotal).order_by('-min')
+        discount = discounts[0].discount if discounts else 0
+        subtotal_with_discount = subtotal - subtotal * discount
+        total = subtotal_with_discount + subtotal_with_discount * TAX
+        order_data = {
+            "subtotal": subtotal,
+            "tax": TAX,
+            "discount": discount,
+            "total": total
+        }
+        # save a new order to the db
+        serializer = self.get_serializer(data=order_data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
