@@ -10,15 +10,18 @@ import {
   Segment
 } from "semantic-ui-react";
 import {PRODUCTS} from "../../config.js";
+import {AddButton} from "./AddButton";
+import {RemoveButton} from "./RemoveButton";
 
 class ProductList extends React.Component {
  constructor(props) {
     super(props);
 
     this.state = {
-      items: null,
+      items: []
     };
   }
+
    componentDidMount() {
       this.getItems();
    }
@@ -35,6 +38,8 @@ class ProductList extends React.Component {
           .catch(() => {
        });
    }
+
+
   render() {
     return (
       <Container>
@@ -42,21 +47,15 @@ class ProductList extends React.Component {
           {this.state.items.map(item => {
             return (
               <Item key={item.id}>
-                <Item.Image src={item.image} />
-                <Item.Content>
-                  <Item.Header
-                    as="a"
-                    onClick={() =>
-                      this.props.history.push(`/products/${item.id}`)
-                    }
-                  >
-                    {item.title}
-                  </Item.Header>
-                  <Item.Meta>
-                    <span className="cinema">{item.category}</span>
-                  </Item.Meta>
+                <h1>{item.title}</h1>
+                <img src={require("../../images/caste.jpg").default}/>
+                <h1>{"$"+item.price}</h1>
+                <Item.Content floated='right'>
+                    <AddButton>Add</AddButton>
+                    <RemoveButton>Remove</RemoveButton>
                 </Item.Content>
               </Item>
+
             );
           })}
         </Item.Group>
@@ -70,6 +69,7 @@ const mapDispatchToProps = dispatch => {
     refreshCart: () => dispatch(fetchCart())
   };
 };
+
 
 export default connect(
   null,
