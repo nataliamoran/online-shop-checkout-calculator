@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route} from 'react-router-dom';
 import Store from "./components/pages/Store.js"
 import About from "./components/pages/About.js"
 import Checkout from "./components/pages/Checkout.js"

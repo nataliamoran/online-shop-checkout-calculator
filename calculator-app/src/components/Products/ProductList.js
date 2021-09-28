@@ -1,27 +1,43 @@
 import React from "react";
 import {
   Container,
-  Dimmer,
-  Image,
   Item,
-  Label,
-  Loader,
-  Message,
-  Segment
+  Label
 } from "semantic-ui-react";
 import {PRODUCTS} from "../../config.js";
-import {AddButton} from "./AddButton";
-import {RemoveButton} from "./RemoveButton";
+import {Button} from "../Button";
 
 class ProductList extends React.Component {
  constructor(props) {
     super(props);
 
     this.state = {
-      items: []
+      cartItems: [],
+      setCartItems: [],
+      items: [],
+      chosenItem : '',
+      chosenQuantity : 0,
+      value : 0
     };
   }
 
+
+handleClick = item => () => {
+    this.setState({value: item.id});
+  };
+
+handleClick2 = item => () => {
+    const exist = this.state.cartItems.find((x) => x.id === item.id);
+    if (exist) {
+      this.state.cartItems(
+        this.state.cartItems.map((x) =>
+          x.id === item.id ? { ...exist, qty: exist.qty + 1 } : x
+        )
+      );
+    } else {
+      this.state.cartItems([...this.state.cartItems, { ...item, qty: 1 }]);
+    }
+  };
    componentDidMount() {
       this.getItems();
    }
@@ -40,6 +56,8 @@ class ProductList extends React.Component {
    }
 
 
+
+
   render() {
     return (
   <Container>
@@ -47,16 +65,17 @@ class ProductList extends React.Component {
   {this.state.items.map(item => {
    return (
    <Item key={item.id}>
-      <Item.Image src={require('../../images/castle.jpg').default}  size='small' />
+      <Item.Image src={item.image}  size='small' />
       <Item.Content>
         <Item.Header as='a'>{item.title}</Item.Header>
         <Item.Meta>
           <Label>{item.category.title}</Label>
           <Label icon='dollar' content={item.price} />
+          <Label icon='cart' content={this.state.value} />
         </Item.Meta>
         <Item.Extra>
-            <AddButton>Add</AddButton>
-            <RemoveButton>Remove</RemoveButton>
+            <Button onClick={this.handleClick(item)}>Add</Button>
+            <Button>Remove</Button>
         </Item.Extra>
       </Item.Content>
     </Item>);
