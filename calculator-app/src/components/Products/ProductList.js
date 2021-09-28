@@ -13,19 +13,27 @@ class ProductList extends React.Component {
 
     this.state = {
       cart: {},
-      allProducts: [],
-      cartSize: 0
+      allProducts: []
     };
   }
 
 
-handleClick(state, product) {
+handleClick(state, product, quantity) {
      const productsInCartNum = state.cartSize;
      const productId = product.id;
      if (productId in state.cart){
-         state.cart[productId] += 1;
+        if(quantity == 1){
+            state.cart[productId] += quantity;
+        }
+        else{
+            if(state.cart[productId]>0){
+                state.cart[productId] += quantity;
+            }
+        }
      } else {
-         state.cart[productId] = 1;
+        if(quantity == 1){
+            state.cart[productId] = 1;
+        }
      }
 
      this.setState({
@@ -81,11 +89,11 @@ handleClick(state, product) {
         <Item.Meta>
           <Label>{item.category.title}</Label>
           <Label icon='dollar' content={item.price} />
-          <Label icon='cart' content={this.state.cartSize} />
+          <Label icon='cart' content={this.state.cart[item.id]} />
         </Item.Meta>
         <Item.Extra>
-            <Button onClick={() => this.handleClick(this.state, item)}>Add</Button>
-            <Button>Remove</Button>
+            <Button onClick={() => this.handleClick(this.state, item, 1)}>Add</Button>
+            <Button onClick={() => this.handleClick(this.state, item, -1)}>Remove</Button>
         </Item.Extra>
       </Item.Content>
     </Item>);
