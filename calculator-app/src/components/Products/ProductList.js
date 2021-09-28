@@ -12,32 +12,41 @@ class ProductList extends React.Component {
     super(props);
 
     this.state = {
-      cartItems: [],
-      setCartItems: [],
-      items: [],
-      chosenItem : '',
-      chosenQuantity : 0,
-      value : 0
+      cart: {},
+      allProducts: [],
+      cartSize: 0
     };
   }
 
 
-handleClick = item => () => {
-    this.setState({value: item.id});
+handleClick(state, product) {
+     const productsInCartNum = state.cartSize;
+     const productId = product.id;
+     if (productId in state.cart){
+         state.cart[productId] += 1;
+     } else {
+         state.cart[productId] = 1;
+     }
+
+     this.setState({
+         cartSize: productsInCartNum + 1,
+         cart: state.cart,
+     });
   };
 
-handleClick2 = item => () => {
-    const exist = this.state.cartItems.find((x) => x.id === item.id);
-    if (exist) {
-      this.state.cartItems(
-        this.state.cartItems.map((x) =>
-          x.id === item.id ? { ...exist, qty: exist.qty + 1 } : x
-        )
-      );
-    } else {
-      this.state.cartItems([...this.state.cartItems, { ...item, qty: 1 }]);
-    }
-  };
+// handleClick2 = item => () => {
+//     const exist = this.state.cartItems.find((x) => x.id === item.id);
+//     if (exist) {
+//       this.state.cartItems(
+//         this.state.cartItems.map((x) =>
+//           x.id === item.id ? { ...exist, qty: exist.qty + 1 } : x
+//         )
+//       );
+//     } else {
+//       this.state.cartItems([...this.state.cartItems, { ...item, qty: 1 }]);
+//     }
+//   };
+
    componentDidMount() {
       this.getItems();
    }
@@ -47,7 +56,7 @@ handleClick2 = item => () => {
        .then((response) => response.json())
        .then((json) => {
             this.setState({
-              items: json,
+              allProducts: json,
             });
             this.forceUpdate();
           })
@@ -59,10 +68,11 @@ handleClick2 = item => () => {
 
 
   render() {
+       console.log(this.state.cart);
     return (
   <Container>
   <Item.Group divided>
-  {this.state.items.map(item => {
+  {this.state.allProducts.map(item => {
    return (
    <Item key={item.id}>
       <Item.Image src={item.image}  size='small' />
@@ -71,10 +81,10 @@ handleClick2 = item => () => {
         <Item.Meta>
           <Label>{item.category.title}</Label>
           <Label icon='dollar' content={item.price} />
-          <Label icon='cart' content={this.state.value} />
+          <Label icon='cart' content={this.state.cartSize} />
         </Item.Meta>
         <Item.Extra>
-            <Button onClick={this.handleClick(item)}>Add</Button>
+            <Button onClick={() => this.handleClick(this.state, item)}>Add</Button>
             <Button>Remove</Button>
         </Item.Extra>
       </Item.Content>
