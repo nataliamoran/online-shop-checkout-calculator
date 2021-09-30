@@ -23,10 +23,9 @@ class StoreList extends React.Component {
 
 
 handleClick(state, product, quantity) {
-     const productsInCartNum = state.cartSize;
      const productId = product.id;
      if (productId in state.cart){
-        if(quantity == 1){
+        if(quantity === 1){
             state.cart[productId] += quantity;
         }
         else{
@@ -35,7 +34,7 @@ handleClick(state, product, quantity) {
             }
         }
      } else {
-        if(quantity == 1){
+        if(quantity === 1){
             state.cart[productId] = 1;
         }
      }
@@ -179,7 +178,7 @@ handleFilter(fil){
               <div class="ui teal button">
                 <i class="dollar icon"></i> Total
               </div>
-              <a class="ui basic teal left pointing label">
+              <a class="ui basic teal left pointing label" href="/#">
                 {this.state.order.total}
               </a>
             </div>
@@ -187,7 +186,7 @@ handleFilter(fil){
               <div class="ui basic blue button">
                 <i class="tag icon"></i> Discount
               </div>
-              <a class="ui basic left pointing blue label">
+              <a class="ui basic left pointing blue label" href="/#">
                 {this.state.order.discount}
               </a>
             </div>
@@ -195,7 +194,7 @@ handleFilter(fil){
               <div class="ui basic blue button">
                 <i class="chart line icon"></i> Tax
               </div>
-              <a class="ui basic left pointing blue label">
+              <a class="ui basic left pointing blue label" href="/#">
                 {this.state.order.tax}
               </a>
             </div>
@@ -203,7 +202,7 @@ handleFilter(fil){
               <div class="ui basic blue button">
                 <i class="circle icon"></i> Subtotal
               </div>
-              <a class="ui basic left pointing blue label">
+              <a class="ui basic left pointing blue label" href="/#">
                 {this.state.order.subtotal}
               </a>
             </div>
