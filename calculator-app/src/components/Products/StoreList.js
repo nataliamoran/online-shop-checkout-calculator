@@ -128,7 +128,7 @@ handleFilter(fil){
     </div>
 
     <div class= {" ui buttons"}>
-        <Button onClick={() => this.handleFilter('')}>{"Add"}</Button>
+        <Button onClick={() => this.handleFilter('')}>{"All"}</Button>
         {this.state.allCategories.map(category => {
              return (
                  <Button onClick={() => this.handleFilter(category.title)}>{category.title}</Button>
