@@ -9,6 +9,7 @@ const BASE_REACT_URL = window.location.origin.match(/localhost/)
 const API_ROOT = 'api';
 export const ORDERS = `${BASE_DJANGO_URL}/${API_ROOT}/orders/`;
 export const PRODUCTS = `${BASE_DJANGO_URL}/${API_ROOT}/products/`;
+export const CATEGORIES = `${BASE_DJANGO_URL}/${API_ROOT}/categories/`;
 
 export const STORE =  `${BASE_REACT_URL}/`;
 export const ABOUT =  `${BASE_REACT_URL}/about`;

@@ -4,16 +4,17 @@ import {
   Item,
   Label
 } from "semantic-ui-react";
-import {PRODUCTS, ORDERS} from "../../config.js";
+import {PRODUCTS, ORDERS, CATEGORIES} from "../../config.js";
 import {Button} from "../Button";
 
-class ProductList extends React.Component {
+class StoreList extends React.Component {
  constructor(props) {
     super(props);
 
     this.state = {
       cart: {},
       allProducts: [],
+      allCategories: [],
       checkoutMode: false,
       order: [],
       filter : ''
@@ -59,6 +60,7 @@ handleFilter(fil){
 
    componentDidMount() {
       this.getProducts();
+      this.getCategories();
    }
 
    getProducts() {
@@ -67,6 +69,19 @@ handleFilter(fil){
        .then((json) => {
             this.setState({
               allProducts: json,
+            });
+            this.forceUpdate();
+          })
+          .catch(() => {
+       });
+   }
+
+   getCategories() {
+     fetch(CATEGORIES)
+       .then((response) => response.json())
+       .then((json) => {
+            this.setState({
+              allCategories: json,
             });
             this.forceUpdate();
           })
@@ -113,16 +128,13 @@ handleFilter(fil){
         </div>
     </div>
 
-    <div class="three ui buttons">
-         <button class="ui button" onClick={() => this.handleFilter('Dairy')}>
-           Dairy
-         </button>
-         <div class="ui button" tabindex="0" onClick={() => this.handleFilter('Protein')}>
-           Protein
-         </div>
-         <div class="ui button" tabindex="0" onClick={() => this.handleFilter('Fruit')}>
-           Fruit
-         </div>
+    <div class= {" ui buttons"}>
+        <Button onClick={() => this.handleFilter('')}>{"Add"}</Button>
+        {this.state.allCategories.map(category => {
+             return (
+                 <Button onClick={() => this.handleFilter(category.title)}>{category.title}</Button>
+             );
+              })}
        </div>
     {this.state.allProducts.filter(item => item.category.title.includes(this.state.filter)).map(product => {
      return (
@@ -164,10 +176,10 @@ handleFilter(fil){
              </div>
          </div>
             <div class="ui labeled button" tabindex="0">
-              <div class="ui red button">
+              <div class="ui teal button">
                 <i class="dollar icon"></i> Total
               </div>
-              <a class="ui basic red left pointing label">
+              <a class="ui basic teal left pointing label">
                 {this.state.order.total}
               </a>
             </div>
@@ -200,4 +212,4 @@ handleFilter(fil){
   }
   }
 }
-export default ProductList;
+export default StoreList;
