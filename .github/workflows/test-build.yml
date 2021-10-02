@@ -36,11 +36,11 @@ jobs:
 
       - name: Sets env vars to dev
         run: |
-          echo "HOST=${{ secrets.HOSTNAME_DEV }}" >> $GITHUB_ENV
+          echo "HOST=ec2-34-216-118-180.us-west-2.compute.amazonaws.com" >> $GITHUB_ENV
         if: startsWith(github.ref, 'refs/heads/develop')
       - name: Sets env vars to prod
         run: |
-          echo "HOST=${{ secrets.HOSTNAME_PROD }}" >> $GITHUB_ENV
+          echo "HOST=ec2-54-202-56-60.us-west-2.compute.amazonaws.com" >> $GITHUB_ENV
         if: startsWith(github.ref, 'refs/heads/master')
       - name: Add server to known_hosts
         uses: kielabokkie/ssh-key-and-known-hosts-action@v1
