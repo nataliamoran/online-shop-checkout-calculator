@@ -1,14 +1,9 @@
-import { STORE, ABOUT, CHECKOUT, CONTACT } from '../../config';
+import { STORE, ABOUT, CONTACT } from '../../config';
 
 export const MenuItems = [
     {
         title: 'Store',
         url: STORE,
-        className: 'nav-links'
-    },
-    {
-        title: 'Checkout',
-        url: CHECKOUT,
         className: 'nav-links'
     },
     {

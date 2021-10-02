@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 
 from .models import *
-from .serializers import ProductSerializer, OrderSerializer
+from .serializers import ProductSerializer, OrderSerializer, CategorySerializer
 from rest_framework import viewsets, status
 
 TAX = 0.15
@@ -11,6 +11,9 @@ class ProductView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+class CategoryView(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
 class OrderView(viewsets.ModelViewSet):
     queryset = Order.objects.all()

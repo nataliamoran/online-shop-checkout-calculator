@@ -1,11 +1,11 @@
 import React from "react";
 import Navbar from "../../components/Navbar/Navbar";
-import ProductList from "../../components/Products/ProductList";
+import StoreList from "../../components/Products/StoreList";
 export default  function Store(){
     return (
       <div className={"Store"}>
         <Navbar />
-          <ProductList/>
+          <StoreList/>
       </div>
     )
 }

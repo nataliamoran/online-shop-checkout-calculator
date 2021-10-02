@@ -1,12 +1,16 @@
-   const BASE_URL = window.location.origin.match(/localhost/)
+const BASE_DJANGO_URL = window.location.origin.match(/localhost/)
+  ? 'http://localhost:8000'
+  : window.location.origin;
+
+const BASE_REACT_URL = window.location.origin.match(/localhost/)
   ? 'http://localhost:3000'
   : window.location.origin;
 
 const API_ROOT = 'api';
-export const CART = `${BASE_URL}/${API_ROOT}/cart`;
-export const PRODUCTS = `${BASE_URL}/${API_ROOT}/products`;
+export const ORDERS = `${BASE_DJANGO_URL}/${API_ROOT}/orders/`;
+export const PRODUCTS = `${BASE_DJANGO_URL}/${API_ROOT}/products/`;
+export const CATEGORIES = `${BASE_DJANGO_URL}/${API_ROOT}/categories/`;
 
-export const STORE =  `${BASE_URL}/`;
-export const CHECKOUT =  `${BASE_URL}/checkout`;
-export const ABOUT =  `${BASE_URL}/about`;
-export const CONTACT =  `${BASE_URL}/contact`;
+export const STORE =  `${BASE_REACT_URL}/`;
+export const ABOUT =  `${BASE_REACT_URL}/about`;
+export const CONTACT =  `${BASE_REACT_URL}/contact`;
