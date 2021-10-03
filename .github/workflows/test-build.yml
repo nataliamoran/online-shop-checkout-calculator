@@ -99,7 +99,6 @@ jobs:
         run: |
           cd calculator-app
           npm run build --if-present
-          mv build fe
           cd ..
 
       - name: Sets env vars to dev server
@@ -121,7 +120,7 @@ jobs:
           host: ${{ env.HOST }}
           username: ${{ secrets.USERNAME_DEV }}
           key: ${{ secrets.SSH_KEY }}
-          source: calculator-app/fe
+          source: calculator-app/build/*
           target: /home/ubuntu/projects/dev/fe
           overwrite: true
   slackNotification:
