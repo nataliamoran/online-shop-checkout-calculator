@@ -3,19 +3,31 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import ProductSerializer, OrderSerializer, CategorySerializer
 from rest_framework import viewsets, status
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 TAX = 0.15
 
 
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
+
+
 class ProductView(viewsets.ModelViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+
 class CategoryView(viewsets.ModelViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+
 class OrderView(viewsets.ModelViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
