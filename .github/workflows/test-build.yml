@@ -55,6 +55,7 @@ jobs:
           host: ${{env.HOST}}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
+          overwrite: true
       - name: Copy requirements.txt to server
         uses: garygrossgarten/github-action-scp@release
         with:
@@ -63,6 +64,7 @@ jobs:
           host: ${{env.HOST}}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
+          overwrite: true
       - name: Reactivate services on server
         uses: appleboy/ssh-action@master
         with:
@@ -121,6 +123,7 @@ jobs:
           host: ${{ env.HOST }}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
+          overwrite: true
   slackNotification:
     name: Slack Notification
     runs-on: ubuntu-latest
