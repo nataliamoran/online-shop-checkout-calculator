@@ -63,7 +63,7 @@ jobs:
           username: ${{ secrets.USERNAME_DEV }}
           key: ${{ secrets.SSH_KEY }}
           source: requirements.txt
-          target: /home/ubuntu/projects/dev/requirements.txt
+          target: /home/ubuntu/projects/dev
           overwrite: true
       - name: Reactivate services on server
         uses: appleboy/ssh-action@master
