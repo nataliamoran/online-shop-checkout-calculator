@@ -51,7 +51,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           local: backend
-          remote: ~/projects/dev
+          remote: /home/ubuntu/projects/dev
           host: ${{env.HOST}}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
@@ -59,7 +59,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           local: requirements.txt
-          remote: ~/projects/dev/requirements.txt
+          remote: /home/ubuntu/projects/dev/requirements.txt
           host: ${{env.HOST}}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
@@ -117,7 +117,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           local: calculator-app/fe
-          remote: ~/projects/dev
+          remote: /home/ubuntu/projects/dev
           host: ${{ env.HOST }}
           username: ${{ secrets.USERNAME_DEV }}
           privateKey: ${{ secrets.SSH_KEY }}
