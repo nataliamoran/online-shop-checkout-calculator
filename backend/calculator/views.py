@@ -9,9 +9,9 @@ TAX = 0.15
 
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
-
+    # from https://stackoverflow.com/questions/30871033/django-rest-framework-remove-csrf
     def enforce_csrf(self, request):
-        return  # To not perform the csrf check previously happening
+        return
 
 
 class ProductView(viewsets.ModelViewSet):
