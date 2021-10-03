@@ -25,12 +25,12 @@ Please see the report at `docs/report.pdf`
 3. On the calculator website you will see different product categories: `All`, `Dairy`, `Bakery`, `Veggies`. 
 Please use these categories to filter products.
 
-4. Choose products by clicking the button `Add` near the product of your choice. 
+4. Add products to your cart by clicking the `Add` button near the product of your choice. 
 
 5. If you want to remove some product from your shopping cart, please click the button `Remove`. 
 If you previously added multiple quantities of some product, you would need to click `Remove` multiple times. 
 
-6. To checkout click `Shop` button. If a user's cart is empty, the `Shop` button is deactivated. 
+6. To checkout click the `Shop` button. If a user's cart is empty, the `Shop` button is deactivated. 
 If, when hovering over the `Shop` button, you see the (x) sign instead of an arrow sign, then please add products into your empty cart.   
 
 7. Please notice that a discount is calculated automatically. All discounts are configurable in the admin system. 
@@ -38,7 +38,7 @@ If, when hovering over the `Shop` button, you see the (x) sign instead of an arr
     * If a user spends more than $100, this user gets the discount 10%
     * If a user spends more than $200, this user gets the discount 20%
     
-8. To go back to grocery shopping, click `Store` button.
+8. To go back to grocery shopping, click the `Store` button.
 
 9. To read about us, click `About` in the menu.
 
@@ -51,18 +51,18 @@ You can add, edit and remove categories, discounts and products.
 Also, you can view all product orders made on the website and their timestamps. 
 
 # Additional Functionality
-1. The website has a navigation bar 
-2. Each product has a category and can be filtered by its category
-3. Additional pages: `About` and `Contact Us`
-4. Automated multi-level discounts: the more a user pays, the larger discount this user gets 
-5. All calculations are made by a backend. The backend is implemented with Django 
+1. The website has a responsive navigation bar. 
+2. Each product has a category and can be filtered by its category.
+3. Additional pages: `About` and `Contact Us`.
+4. Automated multi-level discounts: the more a user pays, the larger discount this user gets. 
+5. All calculations are made by a backend. The backend is implemented with Django. 
 6. Admin system to add, edit and delete products, categories, and discounts. 
-Also, all shopping orders are recorded and can be viewed in the admin system
-7. SQLite3 Database
-8. REST API to retrieve product information and to checkout
-9. Extensive test coverage (please see `backend/calculator/tests.py`)
-10. Automated testing and deployment on `push` and `merge` for both `develop` and `prod` environments
-11. Slack notifications on successful deployment
+Also, all shopping orders are recorded and can be viewed in the admin system.
+7. SQLite3 Database.
+8. REST API to retrieve product information and to checkout.
+9. Extensive test coverage (please see `backend/calculator/tests.py`).
+10. Automated testing and deployment on `push` and `merge` for both `develop` and `prod` environments.
+11. Slack notifications on successful deployment.
 
 ![Slack notifications on successful deployment](./docs/slack_notifications.png)
 
