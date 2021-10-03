@@ -7,7 +7,8 @@ import {
 import {PRODUCTS, ORDERS, CATEGORIES} from "../../config.js";
 import {Button} from "../Button";
 
-class StoreList extends React.Component {
+class StoreList extends React.Component
+ {
     constructor(props) {
         super(props);
 
@@ -117,27 +118,29 @@ class StoreList extends React.Component {
             return (
                 <Container>
                     <Item.Group divided>
-                        <div class="two ui buttons">
-                            <div class="large ui animated button" tabindex="0" onClick={() => this.handleMode(false)}>
-                                <div class="visible content">Store</div>
-                                <div class="hidden content">
-                                    <i class="shop icon"></i>
+                        <div className="two ui buttons">
+                            <div className="large ui animated button" tabIndex="0" onClick={() => this.handleMode(false)}>
+                                <div className="visible content">Store</div>
+                                <div className="hidden content">
+                                    <i className="shop icon"></i>
                                 </div>
                             </div>
-                            <div class="large ui vertical animated button" tabindex="0"
+                            <div className="large ui vertical animated button" tabIndex="0"
                                  onClick={() => this.handleMode(true)}>
-                                <div class="visible content">Shop</div>
-                                <div class="hidden content">
+                                <div className="visible content">Shop</div>
+                                <div className="hidden content">
                                     {checkout_on_hover}
                                 </div>
                             </div>
                         </div>
 
-                        <div class={" ui buttons"}>
+                        <div className={" ui buttons"}>
                             <Button onClick={() => this.handleFilter('')}>{"All"}</Button>
                             {this.state.allCategories.map(category => {
                                 return (
+                                <Item key={category.id}>
                                     <Button onClick={() => this.handleFilter(category.title)}>{category.title}</Button>
+                                                                </Item>
                                 );
                             })}
                         </div>
@@ -167,50 +170,50 @@ class StoreList extends React.Component {
         } else {
             return (
                 <Container>
-                    <div class="two ui buttons">
-                        <div class="large ui animated button" tabindex="0" onClick={() => this.handleMode(false)}>
-                            <div class="visible content">Store</div>
-                            <div class="hidden content">
-                                <i class="shop icon"></i>
+                    <div className="two ui buttons">
+                        <div className="large ui animated button" tabIndex="0" onClick={() => this.handleMode(false)}>
+                            <div className="visible content">Store</div>
+                            <div className="hidden content">
+                                <i className="shop icon"></i>
                             </div>
                         </div>
-                        <div class="large ui vertical animated button" tabindex="0"
+                        <div className="large ui vertical animated button" tabIndex="0"
                              onClick={() => this.handleMode(true)}>
-                            <div class="visible content">Shop</div>
-                            <div class="hidden content">
+                            <div className="visible content">Shop</div>
+                            <div className="hidden content">
                                 {checkout_on_hover}
                             </div>
                         </div>
                     </div>
-                    <div class="ui labeled button" tabindex="0">
-                        <div class="ui teal button">
-                            <i class="dollar icon"></i> Total
+                    <div className="ui labeled button" tabIndex="0">
+                        <div className="ui teal button">
+                            <i className="dollar icon"></i> Total
                         </div>
-                        <a class="ui basic teal left pointing label" href="/#">
+                        <a className="ui basic teal left pointing label" href="/#">
                             ${Math.round(this.state.order.total * 100) / 100}
                         </a>
                     </div>
-                    <div class="ui labeled button" tabindex="0">
-                        <div class="ui basic blue button">
-                            <i class="tag icon"></i> Discount
+                    <div className="ui labeled button" tabIndex="0">
+                        <div className="ui basic blue button">
+                            <i className="tag icon"></i> Discount
                         </div>
-                        <a class="ui basic left pointing blue label" href="/#">
+                        <a className="ui basic left pointing blue label" href="/#">
                             {this.state.order.discount * 100}%
                         </a>
                     </div>
-                    <div class="ui labeled button" tabindex="0">
-                        <div class="ui basic blue button">
-                            <i class="chart line icon"></i> Tax
+                    <div className="ui labeled button" tabIndex="0">
+                        <div className="ui basic blue button">
+                            <i className="chart line icon"></i> Tax
                         </div>
-                        <a class="ui basic left pointing blue label" href="/#">
+                        <a className="ui basic left pointing blue label" href="/#">
                             {this.state.order.tax * 100}%
                         </a>
                     </div>
-                    <div class="ui labeled button" tabindex="0">
-                        <div class="ui basic blue button">
-                            <i class="circle icon"></i> Subtotal
+                    <div className="ui labeled button" tabIndex="0">
+                        <div className="ui basic blue button">
+                            <i className="circle icon"></i> Subtotal
                         </div>
-                        <a class="ui basic left pointing blue label" href="/#">
+                        <a className="ui basic left pointing blue label" href="/#">
                             ${this.state.order.subtotal}
                         </a>
                     </div>
