@@ -1,3 +1,6 @@
+# Report
+Please see the report at `docs/report.pdf`
+
 # Usage Instructions
 
 1. Please see video demonstrations
