@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {MenuItems} from "./MenuItems";
 import './Navbar.css'
-import {Button} from "../Button";
 class Navbar extends Component{
     state = {clicked: false}
 
@@ -12,7 +11,7 @@ class Navbar extends Component{
     render() {
         return(
             <nav className={"NavbarItems"}>
-                <h1 className={"navbar-logo"}>React<i className={"fab fa-react"}></i></h1>
+                <a href="/"><h1 className={"navbar-logo"}>Calculator<i className="calculator icon"></i></h1></a>
                 <div className={"menu-icon"} onClick={this.handleClick}>
                     <i className={this.state.clicked ? 'fas fa-times' : 'fas fa-bars'}></i>
 
@@ -29,7 +28,6 @@ class Navbar extends Component{
                         )
                     })}
                 </ul>
-                <Button>Sign Up</Button>
             </nav>
         )
     }
