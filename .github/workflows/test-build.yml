@@ -122,7 +122,7 @@ jobs:
           username: ${{ secrets.USERNAME_DEV }}
           key: ${{ secrets.SSH_KEY }}
           source: calculator-app/fe
-          target: /home/ubuntu/projects/dev
+          target: /home/ubuntu/projects/dev/fe
           overwrite: true
   slackNotification:
     name: Slack Notification
