@@ -187,7 +187,7 @@ class StoreList extends React.Component {
                             <i class="dollar icon"></i> Total
                         </div>
                         <a class="ui basic teal left pointing label" href="/#">
-                            {this.state.order.total}
+                            ${Math.round(this.state.order.total * 100) / 100}
                         </a>
                     </div>
                     <div class="ui labeled button" tabindex="0">
@@ -195,7 +195,7 @@ class StoreList extends React.Component {
                             <i class="tag icon"></i> Discount
                         </div>
                         <a class="ui basic left pointing blue label" href="/#">
-                            {this.state.order.discount}
+                            {this.state.order.discount}%
                         </a>
                     </div>
                     <div class="ui labeled button" tabindex="0">
@@ -203,7 +203,7 @@ class StoreList extends React.Component {
                             <i class="chart line icon"></i> Tax
                         </div>
                         <a class="ui basic left pointing blue label" href="/#">
-                            {this.state.order.tax}
+                            {this.state.order.tax}%
                         </a>
                     </div>
                     <div class="ui labeled button" tabindex="0">
@@ -211,7 +211,7 @@ class StoreList extends React.Component {
                             <i class="circle icon"></i> Subtotal
                         </div>
                         <a class="ui basic left pointing blue label" href="/#">
-                            {this.state.order.subtotal}
+                            ${this.state.order.subtotal}
                         </a>
                     </div>
                 </Container>
