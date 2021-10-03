@@ -30,21 +30,23 @@ Please use these categories to filter products.
 5. If you want to remove some product from your shopping cart, please click the button `Remove`. 
 If you previously added multiple quantities of some product, you would need to click `Remove` multiple times. 
 
-6. To checkout click `Shop` button. 
-Please notice that a discount is calculated automatically. All discounts are configurable in the admin system. 
+6. To checkout click `Shop` button. If a user's cart is empty, the `Shop` button is deactivated. 
+If, when hovering over the `Shop` button, you see the (x) sign instead of an arrow sign, then please add products into your empty cart.   
+
+7. Please notice that a discount is calculated automatically. All discounts are configurable in the admin system. 
     * If a user spends more than $50, this user gets the discount 5%
     * If a user spends more than $100, this user gets the discount 10%
     * If a user spends more than $200, this user gets the discount 20%
+    
+8. To go back to grocery shopping, click `Store` button.
 
-7. To go back to grocery shopping, click `Store` button.
+9. To read about us, click `About` in the menu.
 
-8. To read about us, click `About` in the menu.
+10. To see our contact details, click `Contact Us` in the menu.
 
-9. To see our contact details, click `Contact Us` in the menu.
+11. To go back to the store, click `Calculator` or `Store` in the menu.
 
-10. To go back to the store, click `Calculator` or `Store` in the menu.
-
-11. To update the website content please use the admin system. 
+12. To update the website content please use the admin system. 
 You can add, edit and remove categories, discounts and products.
 Also, you can view all product orders made on the website and their timestamps. 
 
